@@ -1,6 +1,10 @@
+// http.Server class
 const server = require('http').createServer();
 
+// http.IncomingMessage
 server.on('request', (req, res) => { // Happens every time a client connects to the server
+
+    // http.ServerResponse
     res.writeHead(200, { 'content-type': 'text/plain' });
 
     setTimeout(() => {
