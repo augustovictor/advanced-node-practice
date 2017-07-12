@@ -1,5 +1,5 @@
 // Strategies
-// - Cloning [ Used in this tutorial ]: The application and each one handles part of the workload;
+// - Cloning [ Used in this tutorial ]: The application and each one handles part of the workload; Use this strategy when it is easier to add more resources to ONE machine
 // - Decomposing: Microservices
 // - Splitting: Horizontal partitioning or sharding. It is based, for instance, in user location.
 
