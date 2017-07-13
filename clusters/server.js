@@ -6,6 +6,7 @@
 // Server
 const server = require('http').createServer();
 const pid = process.pid;
+let usersCount;
 
 // Command to test ab -r -c200 -t10 http://localhost:3000/
 // Results:
@@ -14,9 +15,14 @@ const pid = process.pid;
 
 server.on('request', (req, res) => {
     for(let i = 0; i < 1e7; i++);
-    res.end(`Handled by process: ${pid}`)
+    res.write(`Handled by process: ${pid}\n`);
+    res.end(`Users: ${ usersCount }`);
 });
 
 server.listen(3000, () => {
     console.log(`Started process ${pid}`);
+});
+
+process.on('message', msg => {
+    usersCount = msg.payload;
 });
