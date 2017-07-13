@@ -1,35 +1,22 @@
-const server = require('http').createServer();
-const { longComputation } = require('./computation');
-const { fork } = require('child_process');
+// Clusters use the idea of forks
+// It can be used to enable load balancing on an env with multiple CPU cores in ONE machine
+// ONE fork per CPU.
+// It can be done with PM2
 
-// WRONG: This does not allow other requests to hit the server.
-// server.on('request', (req, res) => {
-//     if(req.url === '/comp-wrong') {
-//         const sum = longComputation();
-//         return res.end(`Sum is ${sum}`)
-//     }
-//     res.end('OK');
-// });
+// Server
+const server = require('http').createServer();
+const pid = process.pid;
+
+// Command to test ab -r -c200 -t10 http://localhost:3000/
+// Results:
+// Single core env: 26 req/sec
+// Multi core env: 110 req/sec
 
 server.on('request', (req, res) => {
-    // WRONG: This does not allow other requests to hit the server.
-    if(req.url === '/comp-wrong') {
-        const sum = longComputation();
-        return res.end(`Sum is ${sum}`)
-    }
-
-    // CORRECT: Move the heavy operation into another process using fork();
-    else if(req.url === '/comp') {
-        const computation = fork('./computation.js');
-        computation.send('start');
-        computation.on('message', sumResult => {
-            return res.end(`Sum is ${sumResult}`)
-        });
-    } else {
-        res.end('OK');
-    }
+    for(let i = 0; i < 1e7; i++);
+    res.end(`Handled by process: ${pid}`)
 });
 
 server.listen(3000, () => {
-    console.log('Listening on port 3000');
+    console.log(`Started process ${pid}`);
 });
